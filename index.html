@@ -41,7 +41,7 @@
 </head>
 <body>
 
-    <!-- ==================== 1. 3D STUDIO HERO STAGE ==================== -->
+    <!-- 1. 3D STUDIO HERO STAGE -->
     <section id="hero-stage" class="studio-3d-stage min-h-screen flex flex-col justify-between px-6 md:px-16 py-8 relative overflow-hidden">
         <header class="relative z-30 flex items-center justify-between max-w-7xl w-full mx-auto">
             <a href="#" class="font-heading font-bold text-xl tracking-wide text-white flex items-center gap-2">
@@ -53,7 +53,6 @@
                 <a href="#ai-workspace" class="hover:text-white transition">AI Assistant</a>
                 <a href="#ai-workspace" class="hover:text-white transition">Image Engine</a>
             </nav>
-            <!-- User Login Profile Badge / Button -->
             <div id="auth-nav-badge" class="flex items-center gap-2">
                 <button onclick="openLoginModal()" class="text-xs font-medium px-5 py-2 rounded-full bg-blue-600 text-white hover:bg-blue-500 transition shadow-md">
                     Sign In
@@ -96,7 +95,7 @@
         </div>
     </section>
 
-    <!-- ==================== 2. WORKSPACE SECTION WITH GEMINI API ==================== -->
+    <!-- 2. WORKSPACE SECTION WITH GEMINI API -->
     <section id="ai-workspace" class="min-h-screen py-20 px-4 sm:px-8 flex items-center justify-center relative overflow-hidden"
              style="background: radial-gradient(circle at 50% 0%, #1e3a8a 0%, #090d16 55%, #05070b 100%);">
         
@@ -125,7 +124,7 @@
                         What would you like to do today?
                     </h2>
                     <p class="text-xs sm:text-sm text-slate-500 text-center mb-7">
-                        Powered by Gemini 2.5 Flash & Firebase Auth
+                        Powered by Gemini 1.5 Flash & Firebase Auth
                     </p>
 
                     <div id="chat-output" class="w-full max-h-64 overflow-y-auto space-y-3 mb-6 hidden pr-1"></div>
@@ -160,7 +159,7 @@
         </div>
     </section>
 
-    <!-- ==================== LOGIN MODAL ==================== -->
+    <!-- LOGIN MODAL -->
     <div id="login-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl p-8 max-w-md w-full text-slate-800 shadow-2xl relative">
             <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 font-bold text-lg">✕</button>
@@ -174,126 +173,7 @@
         </div>
     </div>
 
-    <!-- ==================== FIREBASE & GEMINI SCRIPT ==================== -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-        // Tomar Firebase Config (Screenshot theke neoya)
-        const firebaseConfig = {
-            apiKey: "AIzaSyCCbcnPSvYmVbPPORgMS9iLQLSmikFMxC0",
-            authDomain: "maruf-ai-e1f6a.firebaseapp.com",
-            projectId: "maruf-ai-e1f6a",
-            storageBucket: "maruf-ai-e1f6a.firebasestorage.app",
-            messagingSenderId: "353433246844",
-            appId: "1:353433246844:web:8de60be28bd0b323a2fdf9",
-            measurementId: "G-M1TXCS5YSB"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
-
-        window.openLoginModal = () => document.getElementById('login-modal').classList.remove('hidden');
-        window.closeLoginModal = () => document.getElementById('login-modal').classList.add('hidden');
-
-        window.loginWithGoogle = async () => {
-            try {
-                await signInWithPopup(auth, provider);
-                closeLoginModal();
-            } catch (error) {
-                alert("Login Failed: " + error.message);
-            }
-        };
-
-        window.logoutUser = () => signOut(auth);
-
-        onAuthStateChanged(auth, (user) => {
-            const navBadge = document.getElementById('auth-nav-badge');
-            const userInfo = document.getElementById('workspace-user-info');
-            if (user) {
-                navBadge.innerHTML = `<span class="text-xs text-white bg-blue-600/50 px-3 py-1.5 rounded-full border border-blue-400">👤 ${user.displayName.split(' ')[0]}</span> <button onclick="logoutUser()" class="text-xs text-red-300 hover:underline">Logout</button>`;
-                userInfo.innerHTML = `<span class="text-xs text-blue-700 font-semibold">${user.email}</span> <button onclick="logoutUser()" class="text-xs text-red-500 ml-2 underline">Logout</button>`;
-            } else {
-                navBadge.innerHTML = `<button onclick="openLoginModal()" class="text-xs font-medium px-5 py-2 rounded-full bg-blue-600 text-white hover:bg-blue-500 transition shadow-md">Sign In</button>`;
-                userInfo.innerHTML = `<span class="text-xs text-slate-500">Guest Mode</span> <button onclick="openLoginModal()" class="text-xs font-medium px-4 py-2 rounded-full bg-blue-600 text-white">Login</button>`;
-            }
-        });
-    </script>
-
-    <!-- THREE.JS & GEMINI API CHAT LOGIC SCRIPT -->
-    <script>
-        let activeMode = 'chat';
-
-        function setMode(m) {
-            activeMode = (activeMode === m) ? 'chat' : m;
-            const map = { 'chat': 'Smart Chat (Gemini)', 'imagine': '🖼️ Imagine (3D Image Engine)', 'search': '🌐 Web Search', 'agent': '⚡ Agent Automation' };
-            document.getElementById('mode-label').innerText = map[activeMode];
-            ['imagine', 'search', 'agent'].forEach(id => {
-                const btn = document.getElementById('mode-' + id);
-                if (id === activeMode) btn.classList.add('active');
-                else btn.classList.remove('active');
-            });
-        }
-
-        function appendMsg(userText, aiHtml) {
-            const box = document.getElementById('chat-output');
-            box.classList.remove('hidden');
-            const div = document.createElement('div');
-            div.className = "bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs sm:text-sm space-y-2 shadow-sm";
-            div.innerHTML = `<div class="font-semibold text-slate-900">You: <span class="font-normal text-slate-600">${userText}</span></div><div class="text-slate-700 border-t border-slate-200/70 pt-2">${aiHtml}</div>`;
-            box.appendChild(div);
-            box.scrollTop = box.scrollHeight;
-        }
-
-        // Gemini API Integrated Function
-        async function executeCommand() {
-            const inp = document.getElementById('ai-input');
-            const text = inp.value.trim();
-            if (!text) return;
-            inp.value = '';
-
-            if (activeMode === 'imagine' || text.toLowerCase().startsWith('imagine ')) {
-                const clean = text.replace(/^imagine /i, '');
-                const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(clean + ', futuristic 3d studio render, 8k')}?width=512&height=512&nologo=true`;
-                appendMsg(text, `<span class="text-blue-600 font-semibold">3D Visual Engine:</span> Rendering "${clean}"<br><img src="${url}" class="mt-2 rounded-xl shadow-md border border-slate-200 max-w-xs" alt="AI Render">`);
-                return;
-            } else if (activeMode === 'search') {
-                window.open(`https://www.google.com/search?q=${encodeURIComponent(text)}`, '_blank');
-                appendMsg(text, `🌐 Opened web search results for: <b>${text}</b>`);
-                return;
-            } else if (activeMode === 'agent') {
-                const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-                const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'MarufAI_Task.txt'; a.click();
-                appendMsg(text, `⚡ <b>Agent Task Complete:</b> Output downloaded as file.`);
-                return;
-            }
-
-            appendMsg(text, `<span class="text-slate-400 italic">Maruf AI is thinking...</span>`);
-            const chatBox = document.getElementById('chat-output');
-            const replyDiv = chatBox.lastElementChild.querySelector('.border-t');
-
-            try {
-                // Tomar dewa Gemini API key
-                const apiKey = "AQ.Ab8RN6KFdW84axmHeGAKuLM5q_BG_lCQoYFJ7wHJiy2op9cHtg"; 
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: text }] }] })
-                });
-
-                const data = await response.json();
-                const aiReply = data.candidates?.[0]?.content?.parts?.[0]?.text || "No response generated.";
-                replyDiv.innerHTML = `🤖 <b>Maruf AI:</b> ${aiReply.replace(/\n/g, '<br>')}`;
-            } catch (err) {
-                replyDiv.innerHTML = `❌ Error connecting to Gemini API. Check console.`;
-            }
-        }
-
-        function clearChat() {
-            const box = document.getElementById('chat-output');
-            box.innerHTML = ''; box.classList.add('hidden');
-        }
-    </script>
+    <!-- Link External JS File -->
+    <script type="module" src="script.js"></script>
 </body>
 </html>
