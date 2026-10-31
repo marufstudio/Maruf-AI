@@ -1,179 +1,131 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maruf AI — 3D Neural Core & Workspace</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Three.js WebGL 3D Engine -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700;800;900&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; background-color: #070b10; color: #ffffff; margin: 0; overflow-x: hidden; }
-        .font-heading { font-family: 'Montserrat', sans-serif; }
-        .studio-3d-stage {
-            background: radial-gradient(circle at 50% 52%, rgba(148, 169, 189, 0.55) 0%, rgba(56, 76, 96, 0.35) 35%, transparent 70%), linear-gradient(180deg, #070a0f 0%, #101923 36%, #7d92a5 51.5%, #1c2836 64%, #06090d 100%);
-            position: relative; perspective: 1200px;
-        }
-        .watermark-3d-text {
-            font-family: 'Montserrat', sans-serif; font-size: clamp(4.5rem, 15.5vw, 15rem); font-weight: 800; letter-spacing: -0.03em;
-            background: linear-gradient(180deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.05) 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; user-select: none; pointer-events: none; line-height: 1; white-space: nowrap;
-        }
-        .studio-floor-glow {
-            width: 680px; max-width: 90vw; height: 110px;
-            background: radial-gradient(ellipse at center, rgba(0, 119, 255, 0.42) 0%, rgba(15, 23, 42, 0.35) 50%, transparent 75%);
-            filter: blur(22px); transform: rotateX(75deg);
-        }
-        .nav-active { color: #ffffff; position: relative; }
-        .nav-active::after { content: ''; position: absolute; bottom: -10px; left: 0; width: 100%; height: 2px; background: #0077ff; box-shadow: 0 0 12px #0077ff; }
-        .workspace-3d-card {
-            background: radial-gradient(circle at 50% 25%, rgba(240, 247, 255, 0.96) 0%, rgba(255, 255, 255, 0.94) 60%, rgba(248, 250, 252, 0.98) 100%);
-            backdrop-filter: blur(28px); box-shadow: 0 40px 100px -15px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.9) inset;
-        }
-        .btn-3d-blue {
-            background: linear-gradient(180deg, #1a7dff 0%, #005ce6 100%);
-            box-shadow: 0 10px 25px -4px rgba(0, 102, 255, 0.65), inset 0 1px 1px rgba(255, 255, 255, 0.4);
-            transition: all 0.25s ease;
-        }
-        .tool-btn.active { background: linear-gradient(180deg, #eff6ff 0%, #dbeafe 100%); border-color: #2563eb; color: #1d4ed8; font-weight: 600; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maruf AI — MarufVision</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  :root{--bg:#07070d;--violet:#7c5cff;--ice:#8fd3ff;--paper:#f6f7fb}
+  body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:#eef0f7;margin:0}
+  .display{font-family:'Sora',system-ui,sans-serif}
+  .hidden{display:none!important}
+  .view{min-height:100vh}
+  /* Home */
+  .stage{position:relative;height:100vh;min-height:600px;overflow:hidden;
+    background:radial-gradient(70% 50% at 50% 70%,rgba(124,92,255,.35),transparent 70%),linear-gradient(#07070d 60%,#10101c 60.2%,#050509)}
+  .stage::after{content:"";position:absolute;left:0;right:0;top:60%;height:1px;background:linear-gradient(90deg,transparent,var(--ice),var(--violet),transparent);box-shadow:0 0 30px 3px rgba(124,92,255,.7)}
+  #hero-canvas{position:absolute;inset:0;width:100%;height:100%;cursor:grab;touch-action:pan-y}
+  #watermark{position:absolute;left:50%;top:42%;font-size:clamp(5rem,24vw,23rem);font-weight:800;letter-spacing:-.06em;line-height:1;white-space:nowrap;pointer-events:none;user-select:none;color:transparent;background:linear-gradient(#ffffff1f,transparent 85%);-webkit-background-clip:text;background-clip:text;transform:translate(-50%,-50%)}
+  .cta{background:linear-gradient(135deg,var(--violet),var(--ice));color:#07070d;font-weight:700;box-shadow:0 10px 40px -8px rgba(124,92,255,.8);transition:transform .2s}
+  .cta:hover{transform:translateY(-2px)}
+  /* Login */
+  .login-art{background:radial-gradient(80% 60% at 50% 50%,rgba(124,92,255,.35),transparent 70%),#07070d}
+  .paper{background:var(--paper);color:#12121c}
+  /* App */
+  .side{background:#0d0d17;border-right:1px solid #1d1d2c}
+  .tool{display:flex;align-items:center;gap:.7rem;width:100%;padding:.7rem .9rem;border-radius:12px;color:#a8adc4;font-size:.9rem;font-weight:500;transition:.15s;text-align:left}
+  .tool:hover{background:#171726;color:#fff}
+  .tool[aria-pressed="true"]{background:linear-gradient(135deg,rgba(124,92,255,.3),rgba(143,211,255,.15));color:#fff;box-shadow:inset 0 0 0 1px rgba(143,211,255,.35)}
+  .bubble-user{background:#12121c;color:#fff;border-radius:18px 18px 4px 18px}
+  .bubble-ai{background:#fff;color:#1b1d2b;border:1px solid #e3e5ef;border-radius:18px 18px 18px 4px}
+  .dots span{display:inline-block;width:6px;height:6px;margin:0 2px;border-radius:50%;background:#8b90a8;animation:b 1s infinite}
+  .dots span:nth-child(2){animation-delay:.15s}.dots span:nth-child(3){animation-delay:.3s}
+  @keyframes b{0%,80%,100%{transform:translateY(0);opacity:.4}40%{transform:translateY(-5px);opacity:1}}
+  :focus-visible{outline:2px solid var(--ice);outline-offset:2px}
+</style>
 </head>
 <body>
 
-    <!-- 1. 3D STUDIO HERO STAGE -->
-    <section id="hero-stage" class="studio-3d-stage min-h-screen flex flex-col justify-between px-6 md:px-16 py-8 relative overflow-hidden">
-        <header class="relative z-30 flex items-center justify-between max-w-7xl w-full mx-auto">
-            <a href="#" class="font-heading font-bold text-xl tracking-wide text-white flex items-center gap-2">
-                <span class="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-[0_0_12px_#3b82f6]"></span>
-                Maruf<span class="font-light text-blue-400">Vision</span>
-            </a>
-            <nav class="hidden md:flex items-center space-x-10 text-xs font-medium tracking-wider text-slate-300">
-                <a href="#hero-stage" class="nav-active">3D Neural Core</a>
-                <a href="#ai-workspace" class="hover:text-white transition">AI Assistant</a>
-                <a href="#ai-workspace" class="hover:text-white transition">Image Engine</a>
-            </nav>
-            <div id="auth-nav-badge" class="flex items-center gap-2">
-                <button onclick="openLoginModal()" class="text-xs font-medium px-5 py-2 rounded-full bg-blue-600 text-white hover:bg-blue-500 transition shadow-md">
-                    Sign In
-                </button>
-            </div>
-        </header>
-
-        <div class="relative flex flex-col items-center justify-center my-auto py-4 w-full max-w-7xl mx-auto">
-            <h1 class="font-heading text-xl sm:text-3xl md:text-[38px] font-semibold tracking-[0.22em] uppercase text-white text-center z-20 mb-2">
-                EXPLORE INFINITE POSSIBILITIES
-            </h1>
-            <p class="text-[11px] text-slate-200/80 tracking-[0.2em] uppercase z-20 mb-2">
-                Interactive 3D Hardware Core — Drag to Rotate 360°
-            </p>
-            <div id="parallax-watermark" class="watermark-3d-text absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-                MarufAI
-            </div>
-            <div id="hero-3d-canvas" class="w-full h-[360px] sm:h-[430px] relative z-20 cursor-grab active:cursor-grabbing"></div>
-            <div class="studio-floor-glow -mt-16 z-10 pointer-events-none"></div>
-
-            <div class="flex items-center gap-4 mt-4 z-30">
-                <a href="#ai-workspace" class="btn-3d-blue text-white text-xs font-semibold px-9 py-3.5 rounded-full">
-                    Launch Workspace
-                </a>
-                <button onclick="boost3DCore()" class="border border-white/75 hover:bg-white/15 text-white text-xs font-medium px-9 py-3.5 rounded-full transition">
-                    Activate 3D Pulse
-                </button>
-            </div>
-        </div>
-
-        <div class="relative z-30 max-w-7xl w-full mx-auto flex items-center justify-between text-xs text-slate-300 pt-2">
-            <div class="flex items-center space-x-4">
-                <span class="text-white/80 font-medium">Follow Us</span>
-                <a href="#" class="hover:text-blue-400">f</a> <a href="#" class="hover:text-blue-400">in</a> <a href="#" class="hover:text-blue-400">▶</a>
-            </div>
-            <a href="#ai-workspace" class="absolute left-1/2 -translate-x-1/2 animate-bounce text-white/80">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
-            </a>
-            <div class="text-[11px] text-slate-400">WebGL Studio v3.0</div>
-        </div>
-    </section>
-
-    <!-- 2. WORKSPACE SECTION WITH GEMINI API -->
-    <section id="ai-workspace" class="min-h-screen py-20 px-4 sm:px-8 flex items-center justify-center relative overflow-hidden"
-             style="background: radial-gradient(circle at 50% 0%, #1e3a8a 0%, #090d16 55%, #05070b 100%);">
-        
-        <div class="w-full max-w-5xl z-10">
-            <div class="workspace-3d-card rounded-[32px] min-h-[640px] p-6 sm:p-10 flex flex-col justify-between text-slate-800">
-                
-                <div class="flex items-center justify-between border-b border-slate-200/80 pb-4">
-                    <div class="flex items-center gap-2.5">
-                        <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-600 to-cyan-400 flex items-center justify-center text-white font-heading font-bold text-sm shadow-md">
-                            M
-                        </div>
-                        <span class="font-heading font-bold text-lg text-slate-900">Maruf<span class="text-blue-600">AI</span></span>
-                    </div>
-                    <div class="flex items-center gap-2.5" id="workspace-user-info">
-                        <span id="logged-user-email" class="text-xs text-slate-500 font-medium">Guest Mode</span>
-                        <button onclick="openLoginModal()" class="text-xs font-medium px-4 py-2 rounded-full bg-blue-600 text-white">Login</button>
-                    </div>
-                </div>
-
-                <div class="w-full max-w-2xl mx-auto my-auto py-6 flex flex-col items-center">
-                    <div class="relative flex items-center justify-center mb-2">
-                        <div id="orb-3d-canvas" class="w-36 h-36 relative z-10 cursor-pointer"></div>
-                    </div>
-
-                    <h2 class="font-heading text-2xl sm:text-3xl font-bold text-slate-900 text-center mb-1.5">
-                        What would you like to do today?
-                    </h2>
-                    <p class="text-xs sm:text-sm text-slate-500 text-center mb-7">
-                        Powered by Gemini 1.5 Flash & Firebase Auth
-                    </p>
-
-                    <div id="chat-output" class="w-full max-h-64 overflow-y-auto space-y-3 mb-6 hidden pr-1"></div>
-
-                    <div class="w-full bg-white rounded-2xl border border-slate-200/90 shadow-lg p-4 focus-within:border-blue-500 transition">
-                        <div class="flex items-center gap-3">
-                            <input 
-                                id="ai-input" 
-                                type="text" 
-                                placeholder="Ask Gemini AI anything..." 
-                                class="w-full px-2 py-1.5 text-sm text-slate-800 placeholder-slate-400 focus:outline-none"
-                                onkeypress="if(event.key === 'Enter') executeCommand()"
-                            >
-                            <button onclick="executeCommand()" class="w-10 h-10 rounded-full btn-3d-blue text-white flex items-center justify-center shrink-0">
-                                ➤
-                            </button>
-                        </div>
-
-                        <div class="flex flex-wrap items-center gap-2 mt-3 pt-3 border-t border-slate-100">
-                            <button onclick="setMode('imagine')" id="mode-imagine" class="tool-btn text-xs px-3.5 py-1.5 rounded-full border border-slate-200 text-slate-600">🖼️ Imagine</button>
-                            <button onclick="setMode('search')" id="mode-search" class="tool-btn text-xs px-3.5 py-1.5 rounded-full border border-slate-200 text-slate-600">🌐 Web Search</button>
-                            <button onclick="setMode('agent')" id="mode-agent" class="tool-btn text-xs px-3.5 py-1.5 rounded-full border border-slate-200 text-slate-600">⚡ Agent Mode</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex items-center justify-between text-xs text-slate-400 border-t border-slate-200/70 pt-3">
-                    <span>Active Engine: <strong id="mode-label" class="text-blue-600">Smart Chat (Gemini)</strong></span>
-                    <span>Firebase Secure Connected</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- LOGIN MODAL -->
-    <div id="login-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl p-8 max-w-md w-full text-slate-800 shadow-2xl relative">
-            <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 font-bold text-lg">✕</button>
-            <h3 class="font-heading text-2xl font-bold mb-2">Welcome to Maruf AI</h3>
-            <p class="text-xs text-slate-500 mb-6">Sign in with your Google account to sync chats.</p>
-            
-            <button onclick="loginWithGoogle()" class="w-full py-3 px-4 rounded-xl border border-slate-300 font-medium text-sm flex items-center justify-center gap-3 hover:bg-slate-50 transition shadow-sm">
-                <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
-                Continue with Google
-            </button>
-        </div>
+<!-- 1. HOME (public) -->
+<main id="view-home" class="view">
+  <section class="stage">
+    <div id="watermark" class="display" aria-hidden="true">MarufAI</div>
+    <canvas id="hero-canvas" aria-label="3D hardware core. Drag to rotate, click to pulse."></canvas>
+    <header class="absolute top-0 inset-x-0 z-10 flex items-center justify-between px-5 sm:px-10 py-5">
+      <div class="display text-lg font-bold">Maruf<span style="color:var(--ice)">Vision</span></div>
+      <button class="free-chat-btn rounded-full border border-white/25 px-5 py-2 text-sm font-semibold hover:bg-white hover:text-black transition">Free Chat</button>
+    </header>
+    <div class="absolute z-10 inset-x-0 bottom-[8vh] text-center px-6 pointer-events-none">
+      <h1 class="display text-3xl sm:text-5xl font-extrabold tracking-tight">Ask, imagine, search, delegate.</h1>
+      <p class="mt-3 text-white/60 max-w-lg mx-auto text-sm sm:text-base">Drag the core to turn it. Sign in once and your AI workspace opens.</p>
+      <button class="free-chat-btn cta pointer-events-auto mt-6 rounded-full px-8 py-3.5">Start Free Chat</button>
     </div>
+  </section>
+</main>
 
-    <!-- Link External JS File -->
-    <script type="module" src="script.js"></script>
+<!-- 2. LOGIN (gate) -->
+<main id="view-login" class="view hidden">
+  <div class="grid md:grid-cols-2 min-h-screen">
+    <div class="login-art hidden md:flex flex-col items-center justify-center p-10">
+      <canvas id="login-orb" class="w-full max-w-md aspect-square" aria-hidden="true"></canvas>
+      <p class="display text-2xl font-bold mt-2 text-center">Your AI, one sign-in away.</p>
+    </div>
+    <div class="paper flex items-center justify-center p-6">
+      <div class="w-full max-w-sm">
+        <button id="back-home" class="text-sm text-slate-500 hover:text-slate-900 mb-10">&larr; Back to home</button>
+        <h2 class="display text-3xl font-extrabold tracking-tight">Sign in to chat</h2>
+        <p class="mt-2 text-slate-600 text-sm">Use your Google account. The chat opens right after you sign in.</p>
+        <button id="google-btn" class="mt-8 w-full flex items-center justify-center gap-3 rounded-xl bg-white border border-slate-300 py-3.5 font-semibold hover:shadow-md transition">
+          <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.6l6.7-6.7C35.6 2.4 30.2 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.8 6.1C12.3 13.5 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4.1 7.1-10.1 7.1-17.5z"/><path fill="#FBBC05" d="M10.4 28.7A14.5 14.5 0 0 1 9.5 24c0-1.6.3-3.2.9-4.7l-7.8-6.1A24 24 0 0 0 0 24c0 3.9.9 7.5 2.6 10.8l7.8-6.1z"/><path fill="#34A853" d="M24 48c6.2 0 11.4-2 15.2-5.5l-7.5-5.8c-2 1.4-4.7 2.3-7.7 2.3-6.3 0-11.7-4-13.6-9.8l-7.8 6.1C6.5 42.6 14.6 48 24 48z"/></svg>
+          Continue with Google
+        </button>
+        <p id="login-error" class="mt-4 text-sm text-red-600" role="alert"></p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- 3. APP (protected) -->
+<main id="view-app" class="view hidden">
+  <div class="flex h-screen">
+    <aside class="side hidden md:flex w-64 flex-col p-4">
+      <div class="display text-lg font-bold px-2 mb-6">Maruf<span style="color:var(--ice)">Vision</span></div>
+      <nav class="space-y-1" aria-label="Tools">
+        <button class="tool" data-mode="chat" aria-pressed="true">Smart Chat</button>
+        <button class="tool" data-mode="imagine" aria-pressed="false">Imagine</button>
+        <button class="tool" data-mode="search" aria-pressed="false">Search the Web</button>
+        <button class="tool" data-mode="agent" aria-pressed="false">Agent Mode</button>
+      </nav>
+      <div class="mt-auto border-t border-white/10 pt-4">
+        <div id="user-name" class="text-sm font-semibold truncate"></div>
+        <div id="user-email" class="text-xs text-white/50 truncate"></div>
+        <button id="logout-btn" class="mt-3 w-full rounded-lg border border-white/20 py-2 text-sm hover:bg-white hover:text-black transition">Log out</button>
+      </div>
+    </aside>
+
+    <section class="paper flex-1 flex flex-col min-w-0">
+      <header class="flex items-center justify-between gap-3 px-4 sm:px-6 py-3 border-b border-slate-200 bg-white">
+        <div class="flex items-center gap-3 min-w-0">
+          <canvas id="app-orb" class="w-12 h-12 shrink-0" aria-hidden="true"></canvas>
+          <div class="min-w-0"><div class="display font-bold leading-tight">Maruf AI</div><div id="mode-hint" class="text-xs text-slate-500 truncate"></div></div>
+        </div>
+        <div class="md:hidden flex items-center gap-2">
+          <select id="mode-select" class="rounded-lg border border-slate-300 bg-white text-sm py-1.5 px-2" aria-label="Tool">
+            <option value="chat">Smart Chat</option><option value="imagine">Imagine</option><option value="search">Search</option><option value="agent">Agent</option>
+          </select>
+          <button id="logout-btn-m" class="rounded-lg bg-[#12121c] text-white text-sm px-3 py-1.5">Log out</button>
+        </div>
+      </header>
+
+      <div id="chat" class="flex-1 overflow-y-auto px-4 sm:px-8 py-6 space-y-3" role="log" aria-live="polite"></div>
+
+      <div class="px-4 sm:px-8 pb-5">
+        <div class="flex items-end gap-2 rounded-2xl bg-white border border-slate-300 p-2 focus-within:border-[#7c5cff]">
+          <textarea id="input" rows="1" class="flex-1 resize-none bg-transparent px-2 py-2 text-sm outline-none max-h-32" placeholder="Message Maruf AI" aria-label="Message"></textarea>
+          <button id="send" class="rounded-xl cta px-5 py-2.5 text-sm">Send</button>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
